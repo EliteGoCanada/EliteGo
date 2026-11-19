@@ -1,0 +1,13 @@
+{
+  "_help": "All prices in CAD and all-in (tax + gratuity). One-way fare = base + perKm x km + perMin x minutes, rounded to $5, never below min. Kilometres after longKmAfter are charged at longKmDiscount x perKm. hourly = price per hour (3 hour minimum). Used by both the website and the payment page, so prices always match.",
+  "longKmAfter": 50,
+  "longKmDiscount": 0.65,
+  "vehicles": {
+    "Business Sedan":    { "base": 10, "perKm": 2.60, "perMin": 0.70, "min": 65,  "hourly": 95  },
+    "Electric":          { "base": 10, "perKm": 2.60, "perMin": 0.70, "min": 65,  "hourly": 95  },
+    "First Class Sedan": { "base": 15, "perKm": 3.60, "perMin": 0.95, "min": 95,  "hourly": 175 },
+    "Business Van":      { "base": 18, "perKm": 3.40, "perMin": 0.90, "min": 95,  "hourly": 165 },
+    "Cadillac Escalade": { "base": 25, "perKm": 4.20, "perMin": 1.10, "min": 125, "hourly": 199 },
+    "Mercedes-Maybach":  { "base": 60, "perKm": 9.50, "perMin": 2.20, "min": 275, "hourly": 349 }
+  }
+}
