@@ -1,6 +1,12 @@
 [build]
   publish = "public"
 
+[build.environment]
+  # The Google Maps JavaScript API key in public/index.html is a browser key
+  # that is meant to be public (it is restricted to this site's domain in the
+  # Google Cloud console). Tell secrets scanning's smart detection to ignore it.
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyAodRpXjyldEkj8D8s1cE7PBFYO56zTbaw"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
