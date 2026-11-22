@@ -22,12 +22,12 @@ function fareFor(cls, km, min) {
   return Math.max(p.min, Math.round(f / 5) * 5);
 }
 
-async function routeKmMin(from, to) {
+async function routeKmMin(from, to, googleKey) {
   const res = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': process.env.GOOGLE_SERVER_KEY,
+      'X-Goog-Api-Key': googleKey,
       'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration',
     },
     body: JSON.stringify({ origin: { address: from }, destination: { address: to }, travelMode: 'DRIVE', regionCode: 'ca' }),
@@ -41,8 +41,17 @@ async function routeKmMin(from, to) {
 
 export default async (req) => {
   if (req.method !== 'POST') return json(405, { error: 'Method not allowed.' });
-  if (!process.env.STRIPE_SECRET_KEY || !process.env.GOOGLE_SERVER_KEY) {
+  // Tolerate stray spaces/quotes pasted around the keys in the Netlify UI
+  const clean = (v) => String(v ?? '').trim().replace(/^['"]+|['"]+$/g, '').trim();
+  const stripeKey = clean(process.env.STRIPE_SECRET_KEY);
+  const googleKey = clean(process.env.GOOGLE_SERVER_KEY);
+  if (!stripeKey || !googleKey) {
+    console.error('Checkout not configured: missing ' + [!stripeKey && 'STRIPE_SECRET_KEY', !googleKey && 'GOOGLE_SERVER_KEY'].filter(Boolean).join(' and '));
     return json(503, { error: 'Online payment is not set up yet.' });
+  }
+  if (!/^(sk|rk)_(test|live)_/.test(stripeKey)) {
+    console.error('STRIPE_SECRET_KEY does not look like a Stripe secret key (expected it to start with sk_test_ or sk_live_; it starts with "' + stripeKey.slice(0, 4) + '").');
+    return json(503, { error: 'Online payment is not set up correctly yet.' });
   }
 
   let b;
@@ -72,9 +81,9 @@ export default async (req) => {
   } else {
     if (!d.dropoff) return json(400, { error: 'Enter a drop-off address.' });
     try {
-      ({ km, min: mins } = await routeKmMin(d.pickup, d.dropoff));
+      ({ km, min: mins } = await routeKmMin(d.pickup, d.dropoff, googleKey));
     } catch (e) {
-      console.error(e);
+      console.error('Route pricing failed: ' + (e && e.message));
       return json(422, { error: "We couldn't price that route automatically." });
     }
     amount = fareFor(d.vehicle, km, mins);
@@ -90,7 +99,7 @@ export default async (req) => {
     distance_km: km ? km.toFixed(1) : '', duration_min: mins ? String(Math.round(mins)) : '',
   };
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(stripeKey);
   const site = process.env.URL || new URL(req.url).origin;
 
   try {
@@ -121,8 +130,10 @@ export default async (req) => {
     });
     return json(200, { url: session.url, amount });
   } catch (e) {
-    console.error(e);
-    return json(502, { error: 'The payment page could not be opened.' });
+    // Stripe masks keys in its own messages, so this is safe to log
+    console.error('Stripe checkout failed: ' + [e && e.type, e && e.code, e && e.param, e && e.message].filter(Boolean).join(' | '));
+    const why = e && e.type === 'StripeAuthenticationError' ? ' (payment settings need attention)' : '';
+    return json(502, { error: 'The payment page could not be opened' + why + '.' });
   }
 };
 
