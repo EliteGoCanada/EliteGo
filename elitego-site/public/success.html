@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking received | EliteGo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#fff;--soft:#F5F5F5;--ink:#111;--muted:#6B6B6B;--line:#E6E6E6;--black:#0B0B0B;--ok:#1E7B4F;--f:"Poppins","Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:var(--soft);color:var(--ink);font-family:var(--f);line-height:1.6}
+header{background:var(--black);color:#fff;padding:18px max(20px,env(safe-area-inset-left,0px))}
+.logo{font-weight:700;font-size:1.5rem;letter-spacing:-.03em;text-decoration:none;color:inherit}
+.logo span{font-weight:400}
+main{display:grid;place-items:center;padding:40px 20px}
+.card{background:#fff;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.08);padding:clamp(28px,5vw,48px);max-width:560px;width:100%;display:grid;gap:18px}
+.tick{width:56px;height:56px;border-radius:50%;background:#E8F5EE;color:var(--ok);display:grid;place-items:center}
+h1{margin:0;font-size:clamp(1.6rem,4vw,2.1rem);line-height:1.15;letter-spacing:-.02em}
+p{margin:0;color:var(--muted)}
+ol{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)}
+ol b{color:var(--ink)}
+.btn{justify-self:start;display:inline-flex;border-radius:999px;padding:13px 26px;font-weight:600;text-decoration:none;background:var(--black);color:#fff}
+.small{font-size:.85rem}
+</style>
+</head>
+<body>
+<header><a class="logo" href="/">Elite<span>Go</span></a></header>
+<main>
+  <div class="card">
+    <div class="tick"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1>Your ride request is in</h1>
+    <p>Thanks for booking with EliteGo. We've placed a hold on your card for the fare shown at checkout. You won't be charged until we confirm your ride.</p>
+    <ol>
+      <li><b>Within 30 minutes:</b> we confirm availability by email and charge the held amount.</li>
+      <li><b>The day before:</b> you get your chauffeur's name, mobile number and vehicle plate.</li>
+      <li><b>If we can't take the trip,</b> we release the hold and nothing is charged.</li>
+    </ol>
+    <p class="small">Questions? Call 905-866-9333 or email bookings@elitego.ca.</p>
+    <a class="btn" href="/">Back to EliteGo</a>
+  </div>
+</main>
+</body>
+</html>
