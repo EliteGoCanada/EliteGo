@@ -1,6 +1,13 @@
 [build]
   publish = "public"
 
+[build.environment]
+  # The Google Maps JavaScript key in public/index.html is a browser key. It has to
+  # ship to the browser, so it is protected by HTTP-referrer / API restrictions in
+  # Google Cloud Console rather than by being kept secret. Tell Netlify's secrets
+  # scanner that it is expected to appear in the published output.
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyAodRpXjyldEkj8D8s1cE7PBFYO56zTbaw"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
